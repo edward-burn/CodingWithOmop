@@ -38,4 +38,10 @@ Steps:
 6) Do you have any queries about whether something is unclear, might be a bug, or do you see possibilities for improvement to existing functions or possible extensions? Open an issue to discuss. After discussion, you could work on the code and open a pull request for review.
 
 ### Option D.2. Build a package 
+This could take a lot of different forms, but my sugestion would be - creating themes for common types of plots. See bbplot https://github.com/bbc/bbplot, https://github.com/hrbrmstr/hrbrthemes, https://github.com/AtherEnergy/ggTimeSeries, https://github.com/delabj/ggCyberPunk for some inspiration. The idea would be to have functions like "+ gg_pde_time_series()" which formats a time series plot, "+ gg_pde_ps()" which formats a propensity score distribution plot.
 
+Steps: 
+1) Work on creating a function locally 
+2) Put function into a package with only that function using devtools::create_package(). See https://r-pkgs.org/index.html for many more instructions. For now, just work on the package locally. Can you run for an example?
+3) Push to github, and persuade someone to do an initial code review. Are they able to install the package and run your example?
+4) Start addding tests, etc. 
