@@ -40,7 +40,9 @@ Steps:
 This could take a lot of different forms, but my sugestion would be - creating themes for common types of plots. See bbplot https://github.com/bbc/bbplot, https://github.com/hrbrmstr/hrbrthemes, https://github.com/AtherEnergy/ggTimeSeries, https://github.com/delabj/ggCyberPunk for some inspiration. The idea would be to have functions like "+ gg_pde_time_series()" which formats a time series plot, "+ gg_pde_ps()" which formats a propensity score distribution plot, etc.
 
 Steps: 
-1) Work on creating a function locally. For some  
-2) Put function into a package with only that function using devtools::create_package(). See https://r-pkgs.org/index.html for many more instructions. For now, just work on the package locally. Can you run for an example?
-3) Push to github, and persuade someone to do an initial code review. Are they able to install the package and run your example?
-4) Start addding tests, etc. 
+1) Work on creating a function locally first (before worrying about how to put the package together). Probably this approach is the easiest to replicate https://github.com/bbc/bbplot/blob/master/R/bbc_style.R to start with.
+2) Now once you have a function, put it into a package with only that function using devtools::create_package(). See https://r-pkgs.org/index.html for many more instructions on what this can involve (for example, usethis::use_r("name_of_function") will create the R file where you will put that function). But for now, continue to work on it locally (but now as a package). 
+3) Once you can run for an example or two, push to github and persuade someone to do an initial code review. Are they able to install the package and run your example? Can they use for another example. Iterate based on their feedback.
+4) Before adding more functions start addding tests for the existing one (run usethis::use_test("name_of_function") to set up). Use covr to check test coverage. Can you get it to 100%? 
+5) Consider how many dependencies your package has, can any be avoided? 
+6) Now you can start adding more functions etc! 
