@@ -27,7 +27,15 @@ Steps:
 
 ## Developer 
 ### Option D.1. Contributing to CodelistGenerator
+The aim here is to act as a contributor to the Codelistgenerator package (https://oxford-pharmacoepi.github.io/CodelistGenerator/). This does not necessarily involve any programming as, for example, queries relating to the documentation would be very helpful.
 
+Steps: 
+1) Read through the package vignettes (https://oxford-pharmacoepi.github.io/CodelistGenerator/articles/Introduction_to_CodelistGenerator.html and https://oxford-pharmacoepi.github.io/CodelistGenerator/articles/Options_for_CodelistGenerator.html)
+2) Install the package and run an example
+3) Perform code review. Fork the package, and work through through the main functions locally. 
+4) Can you add any tests? Add and open a pull request for review.
+5) Could you add to the existing vignettes or add a new one (e.g. examples for medications and procedures would be nice to have)
+6) Do you have any queries about whether something is unclear, might be a bug, or do you see possibilities for improvement to existing functions or possible extensions? Open an issue to discuss. After discussion, you could work on the code and open a pull request for review.
 
 ### Option D.2. Build a package 
 
