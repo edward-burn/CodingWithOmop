@@ -1,8 +1,11 @@
 # CodingWithOmop
 
+Please note the below instructions are vague. There are certainly non-obvious steps missing below so please ask as you go.
+
+
 ## Analyst track
 ### A.1. Preparing CohortDiagnostics
-The aim here is to prepare the code to run cohort diagnostics for a set of study-specicific cohort definitions. If you don't currently have a project that needs phenotypes, you could choose definitions related to: 1) dementia, 2) COVID-19, 3) mental health disorders (as we have ongoing projects related to each). Please keep in mind the purpose of this exercise is not necessarily to get final study cohort definitions in a couple of days, but rather to give you experience on setting up and interpreting the results from cohort diagnostics.
+The aim here is to prepare the code to run cohort diagnostics for a set of study-specific cohort definitions. If you don't currently have a project that needs phenotypes, you could choose definitions related to: 1) dementia, 2) COVID-19, 3) mental health disorders (as we have ongoing projects related to each). Please keep in mind the purpose of this exercise is not necessarily to get final study cohort definitions in a couple of days, but rather to give you experience on setting up and interpreting the results from cohort diagnostics.
 
 Steps:
 1) Develop the required concept sets, either by running CodelistGenerator (https://oxford-pharmacoepi.github.io/CodelistGenerator/) or by taking a concept set from a previous study (https://github.com/oxford-pharmacoepi/OmopConceptSetLibrary). Note, there are other options to go about this but by using these two new tools, you can help find bugs or areas where documentation is lacking (in which case please open an issue on the respective github repos).
@@ -14,7 +17,7 @@ Steps:
 7) Review the results - would you make any changes to your definition based on your results?
 
 ### A.2. Write custom code to characterise a cohort 
-The aim here is to prepare some code in an R project to further characterise patients in a cohort in a results table in the omop cdm (taking them to be in the standard cohort table format - whether creator by CohortGenerator or otherwise). For example, this could code could be to produce a table 1 based on characteristics relative to cohort start date (e.g. age, sex, prior observation time, etc), or it could be a figure like a histogram (e.g. age at cohort entry, time between cohort start and end date, etc).
+The aim here is to prepare some code in an R project to further characterise patients in a cohort in a results table in the omop cdm (taking them to be in the standard cohort table format - whether creator by CohortGenerator or otherwise). For example, this code could be to produce a table 1 based on characteristics relative to cohort start date (e.g. age, sex, prior observation time, etc), or it could be a figure like a histogram (e.g. age at cohort entry, time between cohort start and end date, etc).
 
 Steps: 
 1) Develop the code yourself (if you don't have access to a live database, you could do this with Eunomia https://github.com/OHDSI/Eunomia)
