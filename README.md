@@ -2,19 +2,27 @@
 
 ## Analyst
 ### A.1. Preparing CohortDiagnostics
-The aim here is to prepare the code to run cohort diagnostics for a set of study-specicific cohort definitions. If you don't currently have a project that needs phenotypes, please choose definitions related to: 1) dementia, 2) COVID-19, 3) cancer. The purpose of this is not really to get to the final study cohorts, but to give you experience on setting up and interpreting the results from cohort diagnostics, so don't procrastinate on finding the perfect set of codes before running cohort diagnostics.
+The aim here is to prepare the code to run cohort diagnostics for a set of study-specicific cohort definitions. If you don't currently have a project that needs phenotypes, you could choose definitions related to: 1) dementia, 2) COVID-19, 3) cancer. The purpose of this exercise is not necessarily to get the final study cohort definitions, but to give you experience on setting up and interpreting the results from cohort diagnostics.
 
 Steps:
 1) Develop the required concept sets, either by running CodelistGenerator (https://oxford-pharmacoepi.github.io/CodelistGenerator/) or by taking a concept set from a previous study (https://github.com/oxford-pharmacoepi/OmopConceptSetLibrary). Note, there are other options to go about this but by using these two new tools, you can help find bugs or areas where documentation is lacking (in which case please open an issue on the respective github repos).
-2) Build cohort definitions using the concept sets, adding the required cohort logic (probably taking first event in history, with no eligibility criteria other than the initial event, and cohort end date being end of observation period - but this could differ depending on the study in question).
+2) Build cohort definitions using the concept sets, adding the required cohort logic (e.g. taking first event in history, with no eligibility criteria other than the initial event, and cohort end date being end of observation period - but this could differ depending on the study in question).
 3) Take the code from this Dementia CohortDiagnostics (https://github.com/oxford-pharmacoepi/DementiaDusCohortDiagnostics - download rather than fork), and switch out the existing cohort definitions to your ones. 
 4) Upload to this github repo by creating a branch (with the option and your name as the name, e.g. "A1_EdBurn") and open a pull request. I would suggest that you use github desktop to help with this. 
-5) Persuade someone else to do a code review who then has the responsibility to accept your pull request.
-6) Persuade someone else to run the cohort diagnostics 
+5) Persuade someone to do a code review and accept your pull request.
+6) Persuade someone to run the cohort diagnostics 
 7) Review the results - would you make any changes to your definition based on your results?
 
 
-### A.2. Write a study specific script 
+### A.2. Write custom code to characterise a cohort 
+The aim here is to prepare some code to further characterise patients in a cohort in a results table in the omop cdm (taking them to be in the standard cohort table format - whether creator by CohortGenerator or otherwise). For example, this could code could be to produce a table 1 based on characteristics relative to cohort start date (e.g. age, sex, prior observation time, etc), or it could be a figure like a histogram (e.g. age at cohort entry, time between cohort start and end date, etc).
+
+Steps: 
+1) Develop the code yourself (if you don't have access to a live database, you could do this with Eunomia https://github.com/OHDSI/Eunomia)
+2) Upload the code to this github in the same way as in step 4) in A.1. above
+3) Persuade someone to do a code review and accept your pull request.
+4) Persuade someone to run the code and return results (make sure there is no results with counts of less than 5)
+5) Review the results - would you make any changes to your code based on the results?
 
 
 ## Developer 
