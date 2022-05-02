@@ -1,6 +1,6 @@
 # CodingWithOmop
 
-## Analyst
+## Analyst track
 ### A.1. Preparing CohortDiagnostics
 The aim here is to prepare the code to run cohort diagnostics for a set of study-specicific cohort definitions. If you don't currently have a project that needs phenotypes, you could choose definitions related to: 1) dementia, 2) COVID-19, 3) cancer. The purpose of this exercise is not necessarily to get the final study cohort definitions, but to give you experience on setting up and interpreting the results from cohort diagnostics.
 
@@ -25,7 +25,7 @@ Steps:
 5) Review the results - would you make any changes to your code based on the results?
 
 
-## Developer 
+## Developer track
 ### Option D.1. Contributing to CodelistGenerator
 The aim here is to act as a contributor to the Codelistgenerator package (https://oxford-pharmacoepi.github.io/CodelistGenerator/). This does not necessarily involve any programming as, for example, queries relating to the documentation would be very helpful.
 
