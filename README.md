@@ -1,6 +1,6 @@
 # CodingWithOmop
 
-## Analyst - Developing a network study
+## Analyst
 ### A.1. Preparing CohortDiagnostics
 The aim here is to prepare the code to run cohort diagnostics for a set of study-specicific cohort definitions. If you don't currently have a project that needs phenotypes, please choose definitions related to: 1) dementia, 2) COVID-19, 3) cancer. The purpose of this is not really to get to the final study cohorts, but to give you experience on setting up and interpreting the results from cohort diagnostics, so don't procrastinate on finding the perfect set of codes before running cohort diagnostics.
 
