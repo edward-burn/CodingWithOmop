@@ -28,7 +28,7 @@ Steps:
 
 
 ## Developer track
-### Option D.1. Contributing to CodelistGenerator
+### D.1. Contributing to CodelistGenerator
 The aim here is to act as a contributor to the Codelistgenerator package (https://oxford-pharmacoepi.github.io/CodelistGenerator/). This does not necessarily involve any programming, as for example queries relating to the documentation would be very helpful.
 
 Steps: 
@@ -39,7 +39,7 @@ Steps:
 5) Could you add to the existing vignettes or add a new one (e.g. examples for medications and procedures would be nice to have). If so discuss with Ed and add to the code (note, there is some precomputation for vignettes that is a little confusing - ask Ed about it if you are writing a new one).
 6) Do you have any queries about whether something is unclear, might be a bug, or do you see possibilities for improvement to existing functions or possible extensions? Open an issue to discuss. After discussion, you could work on the code and open a pull request for review.
 
-### Option D.2. Build a package 
+### D.2. Build a package 
 This could take a lot of different forms, but my sugestion would be - creating themes for common types of plots. See bbplot https://github.com/bbc/bbplot, https://github.com/hrbrmstr/hrbrthemes, https://github.com/AtherEnergy/ggTimeSeries, https://github.com/delabj/ggCyberPunk for some inspiration. The idea would be to have functions like "+ gg_pde_time_series()" which formats a time series plot, "+ gg_pde_ps()" which formats a propensity score distribution plot, etc.
 
 Steps: 
