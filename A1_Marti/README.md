@@ -1,6 +1,10 @@
-CohortDiagnostics for dementia DUS
+CohortDiagnostics for four cohorts
 ========================================================================================================================================================
-
+## Studied cohorts
+1) COVID-19 clinic diagnostic broad
+2) COVID-19 diagnose by PCR positive test
+3) Any COVID-19 test
+4) PCR COVID-19 test
 
 ## To Run
 1) Download this entire repository (you can download as a zip folder using Code -> Download ZIP, or you can use GitHub Desktop). 
