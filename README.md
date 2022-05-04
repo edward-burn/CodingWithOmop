@@ -1,6 +1,6 @@
 # CodingWithOmop
 
-Please note the below instructions are rahter vague. There are certainly non-obvious steps missing below so please ask as you go.
+Please note the below instructions are rather vague. There are certainly non-obvious steps missing below so please ask as you go.
 
 
 ## Analyst track
