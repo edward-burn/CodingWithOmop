@@ -1,0 +1,10 @@
+Package: themeXL
+Type: Package
+Title: an useless theme for ggplot 
+Version: 0.1.0
+Author: XL
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: to apply a styling format to ggplot.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
