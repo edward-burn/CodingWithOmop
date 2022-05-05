@@ -28,6 +28,9 @@ library(Eunomia)
 library(dbplyr)
 library(tictoc)
 library(ggplot2)
+library(compareGroups)
+library(table1)
+
 ```
 
 ## Upload data
@@ -137,5 +140,20 @@ labs(title = "Figure 2: Distribution of age for aspirin users over 50 split by g
 
 
 ## Creating table 1 descriptives
+```{r table1,  message=FALSE, warning=FALSE,echo=FALSE}
+
+table1(~  + age  + factor(ETHNICITY_SOURCE_VALUE) + factor(RACE_SOURCE_VALUE), data= cohort_collected )
+  
+
+```
 
 
+
+
+
+```{r sessioninfor}
+
+# print out the session information
+sessionInfo()
+
+```
