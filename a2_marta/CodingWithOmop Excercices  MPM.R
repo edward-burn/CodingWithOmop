@@ -10,12 +10,17 @@
 
   #'2.2. Loading package Eunomia and connecting to the data
   library(Eunomia)
-  connectionDetails <- getEunomiaConnectionDetails()
-  db <- connect(connectionDetails)
+  #ohdsi database connector: doesn´t properly support dbplyr (only the ohdsi package)
+  #connectionDetails <- getEunomiaConnectionDetails()
+  #db <- connect(connectionDetails)
+  #querySql(db, "SELECT COUNT(*) FROM person;") #Total of individuals
+  #getTableNames(db,databaseSchema = 'main')    #Variables names
+  #disconnect(db)
 
-  querySql(db, "SELECT COUNT(*) FROM person;") #Total of individuals
-  getTableNames(db,databaseSchema = 'main')    #Variables names
-
+  #dbi connection (non-obvious way, but works with dbplyr) 
+  untar(xzfile(system.file("sqlite", "cdm.tar.xz", package = "Eunomia"), open = "rb"),
+        exdir =  tempdir())
+  db <- DBI::dbConnect(RSQLite::SQLite(), paste0(tempdir(),"\\cdm.sqlite"))
 
   #'2.3. Create table 1 of characteristics
   library(DBI)
@@ -54,15 +59,29 @@
   younger50 <- person_db %>% filter(YEAR_OF_BIRTH>=1972) %>% select(PERSON_ID, YEAR_OF_BIRTH)
   younger50 %>% tally()
 
-  person_db %>% select(PERSON_ID, YEAR_OF_BIRTH)
-  
   #See which code is for females
-  querySql(db, "SELECT GENDER_CONCEPT_ID, GENDER_SOURCE_VALUE, GENDER_SOURCE_CONCEPT_ID FROM person GROUP BY GENDER_CONCEPT_ID ;")
-  
+  #querySql(db, "SELECT GENDER_CONCEPT_ID, GENDER_SOURCE_VALUE, GENDER_SOURCE_CONCEPT_ID FROM person GROUP BY GENDER_CONCEPT_ID ;") #only works with ohdsi connector
   female <- filter(person_db, GENDER_CONCEPT_ID == 8532)
   female %>% tally()
   
-
+  #Create AGE variable
+  person_db <- person_db %>% mutate(age = as.numeric(2022 - YEAR_OF_BIRTH)); #person_db %>% select(PERSON_ID,age)
+  age = person_db %>% select(age)
+  
+  #table 1 - collect() option
+  person_db_collected <- person_db %>% collect() 
+  names(person_db_collected)
+  person_db_collected <- person_db_collected %>% mutate(age_cat = cut(age, breaks = c(-1,18,seq(29.999, 89.999, by = 10),150), labels = c('0-18','18-29','30-39','40-49', '50-59', '60-69', '70-79', '80-89', '90+')))
+  table1(~  + age + factor(age_cat) + factor(ETHNICITY_SOURCE_VALUE) + factor(RACE_SOURCE_VALUE) | factor(GENDER_SOURCE_VALUE), data= person_db_collected )
+  
+  #histogram
+  person_db_collected$age %>% hist()
+  person_db_collected %>% select(age) %>% pull() %>% hist()  #pull creats an array
+  
+  #Left join to DEATH_DATE from death_db (theory cause Eunomia doesn't have any record within death_db)
+  death_rec <- death_db %>% mutate(death_date = year(DEATH_DATE)) %>% select(PERSON_ID,DEATH_DATE) %>% compute()
+  person_db %>% left_join(death_rec, by="PERSON_ID")
+  
   #'2.Z. Disconnect from Eunomia
-  disconnect(db)
+  
   
