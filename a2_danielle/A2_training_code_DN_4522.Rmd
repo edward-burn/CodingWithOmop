@@ -1,0 +1,112 @@
+---
+title: "Omop_training_A2"
+author: "Danielle N"
+date: '2022-05-04'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install packages
+
+```{r install_packages,  message=FALSE, warning=FALSE,echo=FALSE}
+
+rm(list = ls()) # clear environment
+
+library(here)
+library(readr)
+library(DBI)
+library(RSQLite)
+library(dplyr)
+library(stringr)
+library(DT)
+library(kableExtra)
+library(CodelistGenerator)
+library(Eunomia)
+library(dbplyr)
+library(tictoc)
+
+```
+
+## Upload data
+
+Using the Eunomia dataset from OHDSI (https://github.com/OHDSI/Eunomia)
+```{r download_eunomia,  message=FALSE, warning=FALSE,echo=FALSE}
+
+#upload Eunomia
+untar(xzfile(system.file("sqlite", "cdm.tar.xz", package = "Eunomia"), open = "rb"), exdir =  tempdir())
+
+db <- DBI::dbConnect(RSQLite::SQLite(), paste0(tempdir(),"\\cdm.sqlite"))
+
+#check version
+get_vocab_version(db=db, vocabulary_database_schema = "main")
+
+```
+
+## Defining a cohort
+
+We want to create a cohort of everyone with a prescription for ... whichever drug has the most prevalence in the dataset
+
+```{r, eval=FALSE }
+
+#Set up the basics
+targetDialect              <- "postgresql" 
+cdm_database_schema        <- "main"
+vocabulary_database_schema <- "main"
+#results_database_schema    <- "results"
+
+#create links to all the database tables
+person_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".person")))
+observation_period_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".observation_period")))
+visit_occurrence_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".visit_occurrence")))
+condition_occurrence_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".condition_occurrence")))
+measurement_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".measurement")))
+observation_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".observation")))
+drug_era_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".drug_era")))
+drug_exposure_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".drug_exposure")))
+concept_db <- tbl(db, sql(paste0("SELECT * FROM ",vocabulary_database_schema,".concept")))
+concept_ancestor_db <- tbl(db, sql(paste0("SELECT * FROM ",vocabulary_database_schema,".concept_ancestor")))
+death_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".death")))
+care_site_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".CARE_SITE")))
+location_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".LOCATION")))
+
+# older80 <- person_db %>% filter(year_of_birth<=1942) %>% select(toupper(c("person_id","year_of_birth")))
+
+
+# Parameters
+
+age_min   <- 18
+age_max   <- 99
+obs.start <- as.Date("2010-01-01")
+obs.end   <- as.Date("2015-01-01")
+conceptID <- 1112807
+gender <- 8532
+
+
+#create a table showing how final population is determined from the initial population
+Ntot <- person_db %>% tally() %>% pull() #2694 people
+exclusion_table <- tibble(concept = "Initial population",N = Ntot)
+
+cohort <- person_db %>% compute()
+# as its a small database want to pick up most data for example
+
+tic()
+drug_era_cohort <- drug_era_db %>% select(PERSON_ID,DRUG_CONCEPT_ID,DRUG_ERA_START_DATE) %>% inner_join(cohort %>% select(PERSON_ID)) %>% filter(DRUG_CONCEPT_ID == conceptID) %>% compute()
+drug_era_cohort %>% tally()
+toc()
+
+cohort <- cohort %>% inner_join(drug_era_cohort) %>% compute()
+
+exclusion_table <- rbind(exclusion_table,c("taking aspirin",cohort %>%
+                                              tally() %>% pull()))
+exclusion_table
+
+cohort_collected <- cohort %>% collect()
+
+# this is not pulling out the unique entries there are multiple entries per person
+
+```
+
+
