@@ -133,17 +133,20 @@ cohort_collected %>%
         axis.text.y = element_text(size= 7.5 )) +
   xlab("Age") + 
   ylab("Person Count") %>%
-labs(title = "Figure 2: Distribution of age for aspirin users over 50 split by gender") +
+labs(title = "Figure 1: Distribution of age for aspirin users over 50 split by gender") +
   ylab("Person Count") #have to rerun this again due to addition of title
 
+
+ggsave("Figure1_age_distribution.pdf")
 ```
 
 
 ## Creating table 1 descriptives
 ```{r table1,  message=FALSE, warning=FALSE,echo=FALSE}
 
-table1(~  + age  + factor(ETHNICITY_SOURCE_VALUE) + factor(RACE_SOURCE_VALUE), data= cohort_collected )
-  
+mytable1 <- table1(~  + age  + factor(ETHNICITY_SOURCE_VALUE) + factor(RACE_SOURCE_VALUE), data= cohort_collected )
+
+write.table (mytable1 , "my_table_1_file.csv", col.names = T, row.names=F, append= T, sep=',')
 
 ```
 
