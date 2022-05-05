@@ -27,6 +27,9 @@ library(CodelistGenerator)
 library(Eunomia)
 library(dbplyr)
 library(tictoc)
+library(ggplot2)
+library(compareGroups)
+library(table1)
 
 ```
 
@@ -46,16 +49,14 @@ get_vocab_version(db=db, vocabulary_database_schema = "main")
 ```
 
 ## Defining a cohort
+We want to create a cohort of everyone with a prescription for ... whichever drug has the most prevalence in the dataset (aspirin)
 
-We want to create a cohort of everyone with a prescription for ... whichever drug has the most prevalence in the dataset
-
-```{r, eval=FALSE }
+```{r, eval=TRUE}
 
 #Set up the basics
 targetDialect              <- "postgresql" 
 cdm_database_schema        <- "main"
 vocabulary_database_schema <- "main"
-#results_database_schema    <- "results"
 
 #create links to all the database tables
 person_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".person")))
@@ -76,37 +77,83 @@ location_db <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".LOCATIO
 
 
 # Parameters
-
-age_min   <- 18
-age_max   <- 99
-obs.start <- as.Date("2010-01-01")
-obs.end   <- as.Date("2015-01-01")
-conceptID <- 1112807
+age_cutoff <- 50
+conceptID <- 1112807 #asprin
 gender <- 8532
-
 
 #create a table showing how final population is determined from the initial population
 Ntot <- person_db %>% tally() %>% pull() #2694 people
 exclusion_table <- tibble(concept = "Initial population",N = Ntot)
 
 cohort <- person_db %>% compute()
-# as its a small database want to pick up most data for example
+# as its a small database want to pick up most data for example ()
+
+# need an age cutoff as in CPRD this will be massive if i just want people with aspirin use
+
+cohort <- cohort %>% mutate(age = 2022-YEAR_OF_BIRTH) %>% filter(age>=age_cutoff) %>% compute()
+
+exclusion_table <- rbind(exclusion_table,c("AGE> 50",cohort %>% tally() %>% pull()))
 
 tic()
 drug_era_cohort <- drug_era_db %>% select(PERSON_ID,DRUG_CONCEPT_ID,DRUG_ERA_START_DATE) %>% inner_join(cohort %>% select(PERSON_ID)) %>% filter(DRUG_CONCEPT_ID == conceptID) %>% compute()
 drug_era_cohort %>% tally()
 toc()
 
-cohort <- cohort %>% inner_join(drug_era_cohort) %>% compute()
+# this extracts the first entry of aspirin use
+cohort <- cohort %>% inner_join(drug_era_cohort) %>% group_by(PERSON_ID) %>% filter(row_number()==1) %>% compute()
 
-exclusion_table <- rbind(exclusion_table,c("taking aspirin",cohort %>%
-                                              tally() %>% pull()))
-exclusion_table
-
+#collect the data
 cohort_collected <- cohort %>% collect()
 
-# this is not pulling out the unique entries there are multiple entries per person
+# complete the exclusion data
+exclusion_table <- rbind(exclusion_table,c("taking aspirin", cohort_collected %>% nrow ) )
+
+```
+
+## Creating a pretty plot
+```{r pretty_plots,  message=FALSE, warning=FALSE,echo=FALSE}
+
+#boring basic plot
+# cohort_collected %>% 
+# ggplot(., aes(x=age))+geom_bar(aes(fill=GENDER_SOURCE_VALUE),position="dodge")          + labs(x="Age", y="No. of patients",title="Figure 1: Distribution of first users of aspirin\nover 50 years old split grouped by gender")+ scale_fill_manual(values=c("pink","powderblue")) 
+
+#pretty pyramid plot
+cohort_collected %>% 
+  ggplot(.,aes(x=age,fill=GENDER_SOURCE_VALUE)) + 
+  geom_bar(data=subset(cohort_collected,GENDER_SOURCE_VALUE=="F"), colour = "black") + 
+  geom_bar(data=subset(cohort_collected,GENDER_SOURCE_VALUE=="M"),
+           colour = "black",aes(y=..count..*(-1))) + 
+  scale_y_continuous(breaks=seq(-50,50,10),labels=abs(seq(-50,50,10))) + 
+  scale_x_continuous(expand = c(0,0), breaks=seq(50,110,5),
+  labels=abs(seq(50,110,5))) +
+  coord_flip() +
+  scale_fill_manual("Gender", values = c("F" = "pink", "M" = "cornflowerblue")) +
+  theme(panel.background = element_rect(fill = "white", colour = "white"),
+        axis.line = element_line(size = 0.5, linetype = "solid", colour = "black"),
+        axis.text.y = element_text(size= 7.5 )) +
+  xlab("Age") + 
+  ylab("Person Count") %>%
+labs(title = "Figure 2: Distribution of age for aspirin users over 50 split by gender") +
+  ylab("Person Count") #have to rerun this again due to addition of title
 
 ```
 
 
+## Creating table 1 descriptives
+```{r table1,  message=FALSE, warning=FALSE,echo=FALSE}
+
+table1(~  + age  + factor(ETHNICITY_SOURCE_VALUE) + factor(RACE_SOURCE_VALUE), data= cohort_collected )
+  
+
+```
+
+
+
+
+
+```{r sessioninfor}
+
+# print out the session information
+sessionInfo()
+
+```
