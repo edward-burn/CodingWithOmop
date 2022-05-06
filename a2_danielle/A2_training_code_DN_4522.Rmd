@@ -177,7 +177,7 @@ ggsave("Figure1_age_distribution.pdf")
 
 mytable1 <- table1(~  + age  + factor(ethnicity_source_value) + factor(race_source_value), data= cohort_collected)
 
-write.table (mytable1 , "my_table_1_file.csv", col.names = T, row.names=F, append= T, sep=',')
+write.table (mytable1 , "my_table_1_file.csv", col.names = T, row.names=F, append= F, sep=',')
 
 mytable1
 
