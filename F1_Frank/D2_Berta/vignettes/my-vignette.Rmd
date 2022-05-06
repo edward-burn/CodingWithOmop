@@ -1,0 +1,77 @@
+---
+title: "x.axis_dates"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{my-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE 
+)
+```
+
+### Function
+```{r setup}
+library(brav)
+```
+x.axis_dates(time,start,end, interval)
+
+**Arguments:**\
+- `time`: Character vector with time units (day, month, week or year).\
+- `interval`: A number, taken to be the interval between x-axis breaks.\
+- `start`: Objects of class “Date” representing the start date.\
+- `end`: Objects of class “Date” representing the end date.\
+
+**Example:**
+```{r, fig.width=6}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+Sys.setlocale("LC_TIME", "English")
+
+# Information required
+time <- "year" # Time units (day, month, week or year)
+interval <- 5  # Interval between x-axis breaks
+start <- min(economics$date) # Start date
+end <- max(economics$date) # End date
+
+# Plot
+y.var <- economics$uempmed
+y.name <- "Unemployment"
+economics %>%
+  ggplot()+
+  geom_point(aes(date,y=y.var))+
+  geom_line(aes(date,y=y.var), size=0.8)+
+  scale_y_continuous(name= y.name)+
+  xlab("")+
+  x.axis_dates(time,start,end, interval)+
+  theme(axis.text.x = element_text(angle=90, size =9),
+        axis.title.y = element_text(size = 9))
+```
+
+```{r, fig.width=6}
+# Information required
+time <- "month" # Time units (day, month, week or year)
+interval <- 24  # Interval between x-axis breaks
+start <- min(economics$date) # Start date
+end <- max(economics$date) # End date
+
+# Plot
+y.var <- economics$uempmed
+y.name <- "Unemployment"
+economics %>%
+  ggplot()+
+  geom_point(aes(date,y=y.var))+
+  geom_line(aes(date,y=y.var), size=0.8)+
+  scale_y_continuous(name= y.name)+
+  xlab("")+
+  x.axis_dates(time,start,end, interval)+
+  theme(axis.text.x = element_text(angle=90, size =9),
+        axis.title.y = element_text(size = 9))
+```
+

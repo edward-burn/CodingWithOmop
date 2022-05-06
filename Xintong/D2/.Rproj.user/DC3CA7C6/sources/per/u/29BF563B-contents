@@ -1,0 +1,8 @@
+uesthis::create_package("C:/Users/xintongl/OneDrive - Nexus365/project/DARWIN/StudyAThon/CodingWithOmop/Xintong/D2")
+
+
+usethis::use_devtools()
+
+library(devtools) ## or library(usethis)
+
+use_devtools()

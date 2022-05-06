@@ -1,0 +1,38 @@
+library(tictoc)
+person_db
+# Find female concept: 1 learn by hard, 2 ATLAS, 3 concept_db
+concept_db %>% filter(concept_id==8532)
+concept_db %>% filter(concept_name=="FEMALE")
+
+# Parameters
+gender    <- 8532
+age_min   <- 70
+age_max   <- 80
+obs.start <- as.Date("2020-01-01")
+obs.end   <- as.Date("2021-01-01")
+conceptID <- 37003432
+
+Ntot            <- person_db %>% tally() %>% pull()
+exclusion_table <- tibble(concept = "Initial population",N = Ntot)
+
+cohort          <- person_db %>% filter(gender_concept_id==gender) %>% select(person_id,year_of_birth) %>% compute()
+exclusion_table <- rbind(exclusion_table,c("Only Females",cohort %>% tally() %>% pull()))
+
+cohort          <- cohort %>% mutate(age = 2022-year_of_birth) %>% filter(age>=age_min) %>% filter(age<=age_max) %>% compute()
+exclusion_table <- rbind(exclusion_table,c("70<=AGE<=80",cohort %>% tally() %>% pull()))
+
+in_observation  <- observation_period_db %>% filter(observation_period_end_date>obs.end) %>% filter(observation_period_start_date<obs.start) %>% select(person_id,observation_period_end_date) %>% compute()
+cohort          <- cohort %>% inner_join(in_observation) %>% compute()
+exclusion_table <- rbind(exclusion_table,c("In observation",cohort %>% tally() %>% pull()))
+
+tic()
+drug_era_cohort <- drug_era_db %>% select(person_id,drug_concept_id,drug_era_start_date) %>% inner_join(cohort %>% select(person_id)) %>% filter(drug_concept_id == conceptID) %>% compute()
+drug_era_cohort %>% tally()
+toc()
+cohort          <- cohort %>% inner_join(drug_era_cohort) %>% compute()
+exclusion_table <- rbind(exclusion_table,c("Vaccinated with Pfizer",cohort %>% tally() %>% pull()))
+exclusion_table
+
+cohort_collected <- cohort %>% collect() 
+cohort_collected <- cohort_collected %>% rename(cohort_end_date = observation_period_end_date) %>% mutate(cohort_start_date = as.Date(drug_era_start_date)) %>% mutate(cohort_definition_id = 1) %>% rename(subject_id = person_id) %>% select(cohort_definition_id,subject_id,cohort_start_date,cohort_end_date)
+cohort_collected
