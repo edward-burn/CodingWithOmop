@@ -588,7 +588,15 @@ cohort &lt;- cohort %&gt;% inner_join(drug_era_cohort) %&gt;% group_by(person_id
 cohort_collected &lt;- cohort %&gt;% collect()
 
 # complete the exclusion data
-exclusion_table &lt;- rbind(exclusion_table,c(&quot;taking aspirin&quot;, cohort_collected %&gt;% nrow ) )</code></pre>
+exclusion_table &lt;- rbind(exclusion_table,c(&quot;taking aspirin&quot;, cohort_collected %&gt;% nrow ) )
+
+exclusion_table</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   concept            N    
+##   &lt;chr&gt;              &lt;chr&gt;
+## 1 Initial population 2694 
+## 2 AGE&gt;50&lt;65          1147 
+## 3 taking aspirin     809</code></pre>
 </div>
 <div id="creating-a-pretty-pyramid-plot" class="section level2">
 <h2>Creating a pretty pyramid plot</h2>

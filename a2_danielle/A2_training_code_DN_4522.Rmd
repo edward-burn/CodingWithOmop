@@ -144,6 +144,9 @@ cohort_collected <- cohort %>% collect()
 # complete the exclusion data
 exclusion_table <- rbind(exclusion_table,c("taking aspirin", cohort_collected %>% nrow ) )
 
+exclusion_table
+
+
 ```
 
 ## Creating a pretty pyramid plot
