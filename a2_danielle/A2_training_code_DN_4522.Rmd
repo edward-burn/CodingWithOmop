@@ -127,7 +127,7 @@ cohort <- person_db %>% compute()
 cohort <- cohort %>% mutate(age = 2022-year_of_birth) %>% filter(age>=age_cutoff) %>% filter(age<=age_cutoff_max) %>% compute()
 
 #fill up the exclusion table
-exclusion_table <- rbind(exclusion_table,c("AGE>50<60",cohort %>% tally() %>% pull()))
+exclusion_table <- rbind(exclusion_table,c("AGE>50<65",cohort %>% tally() %>% pull()))
 
 
 tic()
