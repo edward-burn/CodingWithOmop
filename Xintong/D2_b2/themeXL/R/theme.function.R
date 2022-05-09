@@ -30,3 +30,26 @@ plot.theme.XL <- function(plot,text_size=12,title_size=16,yintercept=1){
       legend.position = "none")
 
 }
+
+
+
+# demonstration of use
+
+# # create sample data
+# set.seed(2022)
+#
+# df <- data.frame(x =1:12,
+#                  estimate =runif(12,0.9,1.2),
+#                  L =runif(12,0,1),
+#                  U =runif(12,1.01,2),
+#                  group=rep(c("A","B","C"),4))
+# # plotting
+# a <- df %>%
+#   ggplot( aes(x= as.character(x),color=group)          ) +
+#   geom_point(aes(y=round(estimate,2)))+
+#   facet_wrap(~ group ) +
+#   geom_linerange(aes(ymin=round(L,2),ymax=round(U,2) ))+
+#   coord_flip()
+#
+# a
+# plot.theme.XL(a)
