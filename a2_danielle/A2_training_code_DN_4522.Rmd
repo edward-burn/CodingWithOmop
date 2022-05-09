@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Install packages
 
-```{r install_packages,  message=FALSE, warning=FALSE,echo=FALSE}
+```{r install_packages,  message=FALSE, warning=FALSE}
 
 rm(list = ls()) # clear environment
 
@@ -37,7 +37,8 @@ library(RPostgreSQL)
 ## Upload data
 
 Using the Eunomia dataset from OHDSI (https://github.com/OHDSI/Eunomia)
-```{r download_eunomia,  message=FALSE, warning=FALSE,echo=FALSE}
+
+```{r download_eunomia,  message=FALSE, warning=FALSE}
 
 #upload Eunomia
 untar(xzfile(system.file("sqlite", "cdm.tar.xz", package = "Eunomia"), open = "rb"), exdir =  tempdir())
@@ -68,9 +69,9 @@ db <- DBI::dbConnect(RSQLite::SQLite(), paste0(tempdir(),"\\cdm.sqlite"))
 ```
 
 ## Defining a cohort
-We want to create a cohort of everyone with a prescription for ... whichever drug has the most prevalence in the dataset (aspirin)
+We want to create a cohort of everyone with a prescription for ... whichever drug has the most prevalence in the dataset (aspirin). Extract people aged 50-60 for a first prescription for aspirin.
 
-```{r, eval=TRUE}
+```{r, message=FALSE, warning=FALSE, eval=TRUE}
 
 #Set up the basics
 targetDialect              <- "postgresql" 
@@ -130,9 +131,9 @@ cohort <- cohort %>% mutate(age = 2022-year_of_birth) %>% filter(age>=age_cutoff
 exclusion_table <- rbind(exclusion_table,c("AGE>50<65",cohort %>% tally() %>% pull()))
 
 
-tic()
+#tic()
 drug_era_cohort <- drug_era_db %>% select(person_id,drug_concept_id,drug_era_start_date) %>% inner_join(cohort %>% select(person_id)) %>% filter(drug_concept_id == conceptID) %>% compute()
-toc()
+#toc()
 
 # this extracts the first entry of aspirin use
 cohort <- cohort %>% inner_join(drug_era_cohort) %>% group_by(person_id) %>% filter(row_number()==1) %>% compute()
@@ -164,7 +165,7 @@ cohort_collected %>%
         axis.text.y = element_text(size= 7.5 )) +
   xlab("Age") + 
   ylab("Person Count") %>%
-labs(title = "Figure 1: Distribution of age for aspirin users over 50 split by gender") +
+labs(title = "Figure 1: Distribution of age for aspirin users between 50-65 split by gender") +
   ylab("Person Count") #have to rerun this again due to addition of title
 
 
@@ -173,6 +174,7 @@ ggsave("Figure1_age_distribution.pdf")
 
 
 ## Creating table 1 descriptives
+
 ```{r table1,  message=FALSE, warning=FALSE,echo=FALSE}
 
 mytable1 <- table1(~  + age  + factor(ethnicity_source_value) + factor(race_source_value), data= cohort_collected)
