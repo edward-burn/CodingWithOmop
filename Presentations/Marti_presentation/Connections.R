@@ -10,21 +10,6 @@ untar(xzfile(system.file("sqlite", "cdm.tar.xz", package = "Eunomia"), open = "r
       exdir = tempdir())
 db <- DBI::dbConnect(RSQLite::SQLite(), paste0(tempdir(),"\\cdm.sqlite"))
 
-remotes::install_github("OHDSI/ETL-Synthea")
-
-library(ETLSyntheaBuilder)
-
-cd <- DatabaseConnector::createConnectionDetails(
-  dbms     = "postgresql", 
-  server   = "localhost/synthea10", 
-  user     = "postgres", 
-  password = "lollipop", 
-  port     = 5432, 
-  pathToDriver = "d:/drivers"  
-)
-
-cdmSchema      <- "cdm_synthea10"
-
 cdm_database_schema        <- "main"
 
 person_db               <- tbl(db, sql(paste0("SELECT * FROM ",cdm_database_schema,".person")))
