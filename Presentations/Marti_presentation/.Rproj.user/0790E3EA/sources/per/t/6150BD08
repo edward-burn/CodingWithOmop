@@ -1,0 +1,26 @@
+{
+    "id": "6150BD08",
+    "path": "~/GitHub/CodingWithOmop/Presentations/Marti_presentation/Connections.R",
+    "project_path": "Connections.R",
+    "type": "r_source",
+    "hash": "1180514104",
+    "contents": "",
+    "dirty": false,
+    "created": 1655742540666.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "14,0",
+        "scrollLine": "1"
+    },
+    "folds": "46|19|57|0|\n58|19|74|0|\n75|20|82|0|\n83|23|110|0|\n111|22|155|0|\n",
+    "lastKnownWriteTime": 1655748934,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1655748934730,
+    "read_only": false,
+    "read_only_alternatives": []
+}
